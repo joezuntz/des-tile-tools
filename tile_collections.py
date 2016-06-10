@@ -37,13 +37,20 @@ class TileCollection(object):
 
     def files_with_path(self, path):
         for tile, filename in self.files.items():
-            yield tile, os.path.join(path, tile)
+            yield tile, os.path.join(path, filename)
 
     def existing_files_with_path(self, path):
         for tile, filename in self.files_with_path(path):
             if os.path.exists(filename):
                 yield tile, filename
-    
+
+    def inverse_filter(self, other):
+        files = {}
+        for tile, filename in self.files.items():
+            if tile not in other:
+                files[tile] = filename
+        return TileCollection(files=files)
+
     def filter(self, other):
         files = {}
         for tile, filename in self.files.items():
